@@ -78,14 +78,17 @@ def get_pie_chart(entered_site):
 
 def get_scar_chart(entered_site, entr_payload):
     filtered_df = spacex_df
+    low, high = entr_payload
+    mask = (filtered_df['Payload Mass (kg)'] > low) & (filtered_df['Payload Mass (kg)'] < high)
     if entered_site == 'ALL':
-       fig1=px.scatter(filtered_df, y='class',
-        x='Payload Mass (kg)')
+       fig1=px.scatter(filtered_df[mask], y='class',
+        x='Payload Mass (kg)',
+        title="Corelation between Payload range {} and {} site".format(entr_payload,entered_site))
        return fig1
     else:    
         sel_df=filtered_df[filtered_df['Launch Site']==entered_site]
-        fig1=px.scatter(sel_df,y='class', x='Payload Mass (kg)',  color="Booster Version Category",
-        title="{} : Site  Success and Failure data".format(entered_site))
+        fig1=px.scatter(sel_df[mask],y='class', x='Payload Mass (kg)',  color="Booster Version Category",
+        title="Corelation between Payload range {} and {} site".format(entr_payload,entered_site))
         return fig1
 
 # Run the app
